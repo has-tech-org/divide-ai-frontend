@@ -12,7 +12,18 @@ export const AuthLayout = () => {
 				/>
 			</div>
 			<div className="flex-1">
-				<Outlet />
+				<div className="max-w-lg px-4 w-full mx-auto flex flex-col justify-center items-center h-full gap-10">
+					<Outlet />
+					<footer>
+						<span className="text-center text-lg text-amber-50 block">
+							divideai.app
+						</span>
+
+						<p className="text-center text-sm text-muted-foreground">
+							Gerencie suas contas de cartão de crédito.
+						</p>
+					</footer>
+				</div>
 			</div>
 		</div>
 	);
