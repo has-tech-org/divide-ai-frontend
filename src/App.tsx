@@ -1,14 +1,11 @@
-import './App.css'
-import { Button } from './components/ui/button'
+import { BrowserRouter } from "react-router";
+import { AppRoutes } from "./routes";
+import "./App.css";
 
-function App() {
-
-  return (
-    <>
-      <span className='text-red-500'>teste 123</span>
-      <Button>Click me</Button>
-    </>
-  )
-}
-
-export default App
+export const App = () => {
+	return (
+		<BrowserRouter>
+			<AppRoutes />
+		</BrowserRouter>
+	);
+};
