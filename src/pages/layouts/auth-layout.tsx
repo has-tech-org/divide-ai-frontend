@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import imageBanner from "@/assets/auth-banner.jpg";
+import { Logo } from "@/components/ui/logo";
 
 export const AuthLayout = () => {
 	return (
@@ -14,10 +15,8 @@ export const AuthLayout = () => {
 			<div className="flex-1">
 				<div className="max-w-lg px-4 w-full mx-auto flex flex-col justify-center items-center h-full gap-10">
 					<Outlet />
-					<footer>
-						<span className="text-center text-lg text-amber-50 block">
-							divideai.app
-						</span>
+					<footer className="flex flex-col items-center">
+						<Logo />
 
 						<p className="text-center text-sm text-muted-foreground">
 							Gerencie suas contas de cartão de crédito.
