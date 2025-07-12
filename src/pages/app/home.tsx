@@ -20,21 +20,18 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 export const Home = () => {
 	return (
 		<div className="h-full space-y-4">
-			<div className="flex items-center gap-4 p-4 border-b border-zinc-800">
+			<div className="flex items-center gap-4 py-4 border-b border-zinc-800">
 				<SidebarTrigger />
 
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href="/">Home</BreadcrumbLink>
+							<BreadcrumbPage>divide.aí</BreadcrumbPage>
 						</BreadcrumbItem>
+
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbLink href="/components">Components</BreadcrumbLink>
-						</BreadcrumbItem>
-						<BreadcrumbSeparator />
-						<BreadcrumbItem>
-							<BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+							<BreadcrumbPage>Home</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
 				</Breadcrumb>
@@ -44,56 +41,68 @@ export const Home = () => {
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">Total Revenue</CardTitle>
+							<CardTitle className="font-normal">Despesas totais</CardTitle>
 
 							<TrendingUp className="w-4 h-4" />
 						</div>
-						<strong className="text-3xl font-semibold">$1,250.00</strong>
+						<strong className="text-3xl font-semibold">R$1.250,00</strong>
 					</CardHeader>
 					<CardFooter>
-						<CardDescription>Visitors for the last 6 months</CardDescription>
+						<CardDescription>
+							Cartão de crédito selecionado: Nubank
+						</CardDescription>
 					</CardFooter>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">Total Revenue</CardTitle>
+							<CardTitle className="font-normal">
+								Usuário mais gastador
+							</CardTitle>
 
 							<TrendingUp className="w-4 h-4" />
 						</div>
-						<strong className="text-3xl font-semibold">$1,250.00</strong>
+						<strong className="text-3xl font-semibold">R$100,00</strong>
 					</CardHeader>
 					<CardFooter>
-						<CardDescription>Visitors for the last 6 months</CardDescription>
+						<CardDescription>
+							Yale Henrique foi o maior gastador neste mês
+						</CardDescription>
 					</CardFooter>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">Total Revenue</CardTitle>
+							<CardTitle className="font-normal">Total de compras</CardTitle>
 
 							<TrendingUp className="w-4 h-4" />
 						</div>
-						<strong className="text-3xl font-semibold">$1,250.00</strong>
+						<strong className="text-3xl font-semibold">77</strong>
 					</CardHeader>
 					<CardFooter>
-						<CardDescription>Visitors for the last 6 months</CardDescription>
+						<CardDescription>
+							Total de compras realizadas no cartão de crédito neste mês
+						</CardDescription>
 					</CardFooter>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">Total Revenue</CardTitle>
+							<CardTitle className="font-normal">
+								Usuários participantes
+							</CardTitle>
 
 							<TrendingUp className="w-4 h-4" />
 						</div>
-						<strong className="text-3xl font-semibold">$1,250.00</strong>
+						<strong className="text-3xl font-semibold">10</strong>
 					</CardHeader>
 					<CardFooter>
-						<CardDescription>Visitors for the last 6 months</CardDescription>
+						<CardDescription>
+							Número de usuários que utilizaram o cartão de crédito neste mês
+						</CardDescription>
 					</CardFooter>
 				</Card>
 			</div>
