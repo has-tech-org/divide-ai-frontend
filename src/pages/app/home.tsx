@@ -16,6 +16,14 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 
 export const Home = () => {
 	return (
@@ -108,6 +116,53 @@ export const Home = () => {
 			</div>
 
 			<ChartAreaInteractive />
+
+			<div>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead className="text-center">Produto</TableHead>
+							<TableHead className="text-center">Valor</TableHead>
+							<TableHead className="text-center">Data</TableHead>
+							<TableHead className="text-center">Categoria</TableHead>
+							<TableHead className="text-center">Responsável</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						<TableRow>
+							<TableCell className="text-center">Produto 1</TableCell>
+							<TableCell className="text-center">R$100,00</TableCell>
+							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">Alimentação</TableCell>
+							<TableCell className="text-center">Yale Henrique</TableCell>
+						</TableRow>
+
+						<TableRow>
+							<TableCell className="text-center">Produto 1</TableCell>
+							<TableCell className="text-center">R$100,00</TableCell>
+							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">Alimentação</TableCell>
+							<TableCell className="text-center">Yale Henrique</TableCell>
+						</TableRow>
+
+						<TableRow>
+							<TableCell className="text-center">Produto 1</TableCell>
+							<TableCell className="text-center">R$100,00</TableCell>
+							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">Alimentação</TableCell>
+							<TableCell className="text-center">Yale Henrique</TableCell>
+						</TableRow>
+
+						<TableRow>
+							<TableCell className="text-center">Produto 1</TableCell>
+							<TableCell className="text-center">R$100,00</TableCell>
+							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">Alimentação</TableCell>
+							<TableCell className="text-center">Yale Henrique</TableCell>
+						</TableRow>
+					</TableBody>
+				</Table>
+			</div>
 		</div>
 	);
 };
