@@ -8,11 +8,13 @@ import { Input } from "@/components/ui/input";
 
 const signInFormSchema = z.object({
 	email: z.string().email("Endereço de email inválido"),
+	name: z.string().min(5, "Nome completo deve ter pelo menos 5 caracteres"),
+	phone: z.string().min(11, "Telefone deve ter pelo menos 11 caracteres"),
 });
 
 type SignInFormData = z.infer<typeof signInFormSchema>;
 
-export const SignInForm = () => {
+export const SignUpForm = () => {
 	const {
 		register,
 		handleSubmit,
@@ -29,6 +31,14 @@ export const SignInForm = () => {
 		<form className="w-full space-y-4" onSubmit={handleSignIn}>
 			<div className="space-y-2">
 				<Label htmlFor="email" className="block">
+					Nome completo
+				</Label>
+				<Input id="name" {...register("name")} placeholder="John Doe" />
+				<span className="text-red-500 text-sm">{errors.name?.message}</span>
+			</div>
+
+			<div className="space-y-2">
+				<Label htmlFor="email" className="block">
 					Email
 				</Label>
 				<Input
@@ -39,15 +49,27 @@ export const SignInForm = () => {
 				<span className="text-red-500 text-sm">{errors.email?.message}</span>
 			</div>
 
+			<div className="space-y-2">
+				<Label htmlFor="phone" className="block">
+					Telefone
+				</Label>
+				<Input
+					id="phone"
+					{...register("phone")}
+					placeholder="(11) 99999-9999"
+				/>
+				<span className="text-red-500 text-sm">{errors.phone?.message}</span>
+			</div>
+
 			<Button variant="default" className="w-full">
-				Entrar
+				Criar conta
 			</Button>
 
 			<Link
-				to="/primeiro-acesso"
+				to="/"
 				className="text-sm text-muted-foreground hover:underline block text-center"
 			>
-				Primeiro acesso? Crie uma conta
+				Já tem uma conta? Faça login
 			</Link>
 		</form>
 	);
