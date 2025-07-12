@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
+import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSignUp } from "../hooks/use-sign-up";
 
 const signInFormSchema = z.object({
 	email: z.string().email("Endereço de email inválido"),
@@ -15,6 +17,8 @@ const signInFormSchema = z.object({
 type SignInFormData = z.infer<typeof signInFormSchema>;
 
 export const SignUpForm = () => {
+	const { mutateAsync: signUp, isPending } = useSignUp();
+
 	const {
 		register,
 		handleSubmit,
@@ -23,8 +27,8 @@ export const SignUpForm = () => {
 		resolver: zodResolver(signInFormSchema),
 	});
 
-	const handleSignIn = handleSubmit((data) => {
-		console.log(data);
+	const handleSignIn = handleSubmit(async (data) => {
+		await signUp(data);
 	});
 
 	return (
@@ -61,8 +65,12 @@ export const SignUpForm = () => {
 				<span className="text-red-500 text-sm">{errors.phone?.message}</span>
 			</div>
 
-			<Button variant="default" className="w-full">
-				Criar conta
+			<Button variant="default" className="w-full" disabled={isPending}>
+				{isPending ? (
+					<Loader className="animate-spin w-4 h-4" />
+				) : (
+					"Criar conta"
+				)}
 			</Button>
 
 			<Link
