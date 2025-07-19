@@ -9,28 +9,40 @@ import {
 	XIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatBytes, useFileUpload } from "@/hooks/use-file-upload";
+import type {
+	FileUploadActions,
+	FileUploadState,
+} from "@/hooks/use-file-upload";
+import { formatBytes } from "@/hooks/use-file-upload";
 
-export function FileUploader() {
-	const maxSize = 10 * 1024 * 1024; // 10MB default
+interface FileUploaderProps
+	extends FileUploadState,
+		Pick<
+			FileUploadActions,
+			| "handleDragEnter"
+			| "handleDragLeave"
+			| "handleDragOver"
+			| "handleDrop"
+			| "openFileDialog"
+			| "removeFile"
+			| "getInputProps"
+		> {
+	maxSize?: number;
+}
 
-	const [
-		{ files, isDragging, errors },
-		{
-			handleDragEnter,
-			handleDragLeave,
-			handleDragOver,
-			handleDrop,
-			openFileDialog,
-			removeFile,
-			getInputProps,
-		},
-	] = useFileUpload({
-		accept: ".pdf",
-		maxSize,
-		initialFiles: [],
-	});
-
+export function FileUploader({
+	files,
+	isDragging,
+	errors,
+	maxSize = 10 * 1024 * 1024,
+	handleDragEnter,
+	handleDragLeave,
+	handleDragOver,
+	handleDrop,
+	openFileDialog,
+	removeFile,
+	getInputProps,
+}: FileUploaderProps) {
 	const file = files[0];
 
 	return (

@@ -1,5 +1,5 @@
 import { Upload, WalletIcon } from "lucide-react";
-
+import type { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -9,9 +9,23 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useFileUpload } from "@/hooks/use-file-upload";
 import { FileUploader } from "./file-uploader";
 
 export function AddNewInvoiceDialog() {
+	const [{ files, isDragging, errors }, actions] = useFileUpload({
+		accept: ".pdf",
+		maxSize: 10 * 1024 * 1024, // 10MB
+		initialFiles: [],
+	});
+
+	const [file] = files;
+
+	const handleClick = (event: MouseEvent) => {
+		event.preventDefault();
+		console.log(file);
+	};
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -37,9 +51,21 @@ export function AddNewInvoiceDialog() {
 					</DialogHeader>
 
 					<div className="space-y-4">
-						<FileUploader />
+						<FileUploader
+							files={files}
+							isDragging={isDragging}
+							errors={errors}
+							{...actions}
+						/>
 
-						<Button className="w-full">Salvar fatura</Button>
+						<Button
+							type="button"
+							className="w-full"
+							onClick={handleClick}
+							disabled={files.length === 0}
+						>
+							Salvar fatura
+						</Button>
 					</div>
 				</div>
 			</DialogContent>
