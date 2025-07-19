@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
+import { AxiosError } from "axios";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +19,7 @@ const signInFormSchema = z.object({
 type SignInFormData = z.infer<typeof signInFormSchema>;
 
 export const SignUpForm = () => {
+	const navigate = useNavigate();
 	const { mutateAsync: signUp, isPending } = useSignUp();
 
 	const {
@@ -28,7 +31,21 @@ export const SignUpForm = () => {
 	});
 
 	const handleSignIn = handleSubmit(async (data) => {
-		await signUp(data);
+		try {
+			await signUp(data);
+			toast.success("Conta criada com sucesso!");
+			navigate("/");
+		} catch (error) {
+			if (!(error instanceof AxiosError)) {
+				return toast.error("Aconteceu um erro inesperado");
+			}
+
+			if (error.status === 400) {
+				return toast.error(error.response?.data.message);
+			}
+
+			return toast.error("Aconteceu um erro inesperado");
+		}
 	});
 
 	return (
