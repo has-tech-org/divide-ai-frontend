@@ -7,7 +7,7 @@ type Params = {
 };
 
 export const signUp = async (data: Params) => {
-	const response = await api.post("/users/register", data);
+	const response = await api.post("/register", data);
 
 	return response.data;
 };
