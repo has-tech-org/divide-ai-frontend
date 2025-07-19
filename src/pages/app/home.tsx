@@ -27,7 +27,7 @@ import {
 
 export const Home = () => {
 	return (
-		<div className="h-full space-y-4">
+		<div className="h-full space-y-4 mb-10">
 			<div className="flex items-center gap-4 py-4 border-b border-zinc-800">
 				<SidebarTrigger />
 
@@ -124,6 +124,7 @@ export const Home = () => {
 							<TableHead className="text-center">Produto</TableHead>
 							<TableHead className="text-center">Valor</TableHead>
 							<TableHead className="text-center">Data</TableHead>
+							<TableHead className="text-center">Parcela</TableHead>
 							<TableHead className="text-center">Categoria</TableHead>
 							<TableHead className="text-center">Responsável</TableHead>
 						</TableRow>
@@ -133,6 +134,7 @@ export const Home = () => {
 							<TableCell className="text-center">Produto 1</TableCell>
 							<TableCell className="text-center">R$100,00</TableCell>
 							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">1/2</TableCell>
 							<TableCell className="text-center">Alimentação</TableCell>
 							<TableCell className="text-center">Yale Henrique</TableCell>
 						</TableRow>
@@ -141,6 +143,7 @@ export const Home = () => {
 							<TableCell className="text-center">Produto 1</TableCell>
 							<TableCell className="text-center">R$100,00</TableCell>
 							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">1/2</TableCell>
 							<TableCell className="text-center">Alimentação</TableCell>
 							<TableCell className="text-center">Yale Henrique</TableCell>
 						</TableRow>
@@ -149,6 +152,7 @@ export const Home = () => {
 							<TableCell className="text-center">Produto 1</TableCell>
 							<TableCell className="text-center">R$100,00</TableCell>
 							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">1/2</TableCell>
 							<TableCell className="text-center">Alimentação</TableCell>
 							<TableCell className="text-center">Yale Henrique</TableCell>
 						</TableRow>
@@ -157,6 +161,7 @@ export const Home = () => {
 							<TableCell className="text-center">Produto 1</TableCell>
 							<TableCell className="text-center">R$100,00</TableCell>
 							<TableCell className="text-center">2025-01-01</TableCell>
+							<TableCell className="text-center">1/2</TableCell>
 							<TableCell className="text-center">Alimentação</TableCell>
 							<TableCell className="text-center">Yale Henrique</TableCell>
 						</TableRow>
