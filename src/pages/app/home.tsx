@@ -3,7 +3,6 @@ import { ChartAreaInteractive } from "@/components/home-chart";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
-	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
