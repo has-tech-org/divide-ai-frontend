@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
+import { isAxiosError } from "axios";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +28,20 @@ export const SignInForm = () => {
 	});
 
 	const handleSignIn = handleSubmit(async (data) => {
-		await signIn(data);
+		try {
+			await signIn(data);
+			toast.success("Um link de verificação foi enviado para o seu email");
+		} catch (error) {
+			if (error) {
+				if (isAxiosError(error)) {
+					if (error.status === 404) {
+						return toast.error(error.response?.data.message);
+					}
+				}
+
+				return toast.error("Aconteceu um erro inesperado");
+			}
+		}
 	});
 
 	return (
