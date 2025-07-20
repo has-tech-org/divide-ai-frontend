@@ -20,6 +20,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useGetProfile } from "@/features/authentication/hooks/use-get-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
 	DropdownMenu,
@@ -39,6 +40,8 @@ const items = [
 ];
 
 export function AppSidebar() {
+	const { data: profile } = useGetProfile();
+
 	return (
 		<Sidebar>
 			<SidebarHeader>
@@ -74,14 +77,18 @@ export function AppSidebar() {
 							className="flex items-center gap-2 w-full justify-start p-2"
 						>
 							<Avatar>
-								<AvatarImage src="https://github.com/shadcn.png" />
-								<AvatarFallback>CN</AvatarFallback>
+								<AvatarImage src={profile?.user.avatar ?? ""} />
+								<AvatarFallback>
+									{profile?.user.name.split(" ")[0].charAt(0)}
+								</AvatarFallback>
 							</Avatar>
 
 							<div className="flex flex-col items-start">
-								<span className="text-sm font-medium">John Doe</span>
+								<p className="text-sm font-medium text-left">
+									{profile?.user.name}
+								</p>
 								<span className="text-xs text-muted-foreground">
-									john.doe@example.com
+									{profile?.user.email}
 								</span>
 							</div>
 						</button>
