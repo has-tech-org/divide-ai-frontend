@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
-import { AxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -36,12 +36,10 @@ export const SignUpForm = () => {
 			toast.success("Conta criada com sucesso!");
 			navigate("/");
 		} catch (error) {
-			if (!(error instanceof AxiosError)) {
-				return toast.error("Aconteceu um erro inesperado");
-			}
-
-			if (error.status === 400) {
-				return toast.error(error.response?.data.message);
+			if (isAxiosError(error)) {
+				if (error.status === 400) {
+					return toast.error(error.response?.data.message);
+				}
 			}
 
 			return toast.error("Aconteceu um erro inesperado");
