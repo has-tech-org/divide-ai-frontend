@@ -23,9 +23,12 @@ import {
 	SelectItem,
 	SelectValue,
 } from "@/components/ui/select";
+import { useGetProfile } from "@/features/authentication/hooks/use-get-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function Header() {
+	const { data: profile } = useGetProfile();
+
 	return (
 		<header className="px-4 md:px-6">
 			<div className="flex h-16 items-center justify-between gap-4">
@@ -51,12 +54,14 @@ export function Header() {
 									<DropdownMenuContent align="start">
 										<DropdownMenuItem>
 											<Avatar>
-												<AvatarImage src="https://github.com/shadcn.png" />
-												<AvatarFallback>CN</AvatarFallback>
+												<AvatarImage src={profile?.user?.avatar ?? ""} />
+												<AvatarFallback>
+													{profile?.user?.name.slice(0, 2).toUpperCase()}
+												</AvatarFallback>
 											</Avatar>
 
 											<span className="text-sm font-medium text-gray-200">
-												Yale Henrique
+												{profile?.user?.name}
 											</span>
 										</DropdownMenuItem>
 									</DropdownMenuContent>
@@ -64,12 +69,14 @@ export function Header() {
 							</BreadcrumbItem>
 							<BreadcrumbItem className="max-md:hidden">
 								<Avatar>
-									<AvatarImage src="https://github.com/shadcn.png" />
-									<AvatarFallback>CN</AvatarFallback>
+									<AvatarImage src={profile?.user?.avatar ?? ""} />
+									<AvatarFallback>
+										{profile?.user?.name.slice(0, 2).toUpperCase()}
+									</AvatarFallback>
 								</Avatar>
 
 								<span className="text-sm font-medium text-gray-200">
-									Yale Henrique
+									{profile?.user?.name.split(" ").slice(0, 2).join(" ")}
 								</span>
 							</BreadcrumbItem>
 
