@@ -7,7 +7,7 @@ import {
 	Settings,
 	User,
 } from "lucide-react";
-import { Logo } from "@/components/ui/logo";
+import { Logo } from "@/components/navbar-components/logo";
 import {
 	Sidebar,
 	SidebarContent,

@@ -1,8 +1,8 @@
 import { isAxiosError } from "axios";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { Header } from "@/components/header";
+import { Navbar } from "@/components/navbar";
 import { api } from "@/lib/api";
 
 export const AppLayout = () => {
@@ -26,13 +26,12 @@ export const AppLayout = () => {
 	}, [navigate]);
 
 	return (
-		<div className="flex h-full bg-zinc-900">
-			<SidebarProvider>
-				<AppSidebar />
-				<main className="flex-1 max-w-7xl w-full mx-auto relative px-4">
-					<Outlet />
-				</main>
-			</SidebarProvider>
+		<div className="h-svh bg-zinc-900">
+			<Header />
+			<Navbar />
+			<main className="max-w-7xl w-full mx-auto relative px-4 my-8">
+				<Outlet />
+			</main>
 		</div>
 	);
 };

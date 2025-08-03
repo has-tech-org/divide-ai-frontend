@@ -1,13 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import { AddNewInvoiceDialog } from "@/components/add-new-invoice-dialog";
 import { ChartAreaInteractive } from "@/components/home-chart";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
 	Card,
 	CardDescription,
@@ -15,7 +7,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
 	Table,
 	TableBody,
@@ -28,27 +19,6 @@ import {
 export const Home = () => {
 	return (
 		<div className="h-full space-y-4 mb-10">
-			<div className="flex items-center gap-4 py-4 border-b border-zinc-800 justify-between">
-				<div className="flex items-center gap-4">
-					<SidebarTrigger />
-
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbPage>divide.aí</BreadcrumbPage>
-							</BreadcrumbItem>
-
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage>Home</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-				</div>
-
-				<AddNewInvoiceDialog />
-			</div>
-
 			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
 				<Card>
 					<CardHeader>

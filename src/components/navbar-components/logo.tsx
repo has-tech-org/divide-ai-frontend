@@ -12,7 +12,7 @@ export function Logo({ className }: LogoProps) {
 			<span className={cn("text-xl font-semibold tracking-tight", className)}>
 				divide
 				<span className="text-amber-500">.aí</span>{" "}
-				<span className="text-sm text-muted-foreground font-normal">
+				<span className="text-xs text-muted-foreground font-normal">
 					{" "}
 					v0.0.1
 				</span>
