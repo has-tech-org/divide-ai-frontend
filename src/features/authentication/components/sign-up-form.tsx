@@ -37,7 +37,7 @@ export const SignUpForm = () => {
 			navigate("/");
 		} catch (error) {
 			if (isAxiosError(error)) {
-				if (error.status === 400) {
+				if (error.status === 409) {
 					return toast.error(error.response?.data.message);
 				}
 			}
