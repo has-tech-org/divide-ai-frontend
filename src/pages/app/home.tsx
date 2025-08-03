@@ -1,4 +1,4 @@
-import { TrendingUp } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 import { ChartAreaInteractive } from "@/components/home-chart";
 import {
 	Card,
@@ -23,69 +23,65 @@ export const Home = () => {
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">Despesas totais</CardTitle>
+							<CardTitle className="font-normal text-sm text-gray-400">
+								Despesas totais
+							</CardTitle>
 
-							<TrendingUp className="w-4 h-4" />
+							<p className="flex items-center gap-1 text-xs bg-emerald-300/10 text-emerald-500 px-1.5 py-1 rounded-sm">
+								<TrendingUp className="w-3 h-3" />
+								50.46%
+							</p>
 						</div>
 						<strong className="text-3xl font-semibold">R$1.250,00</strong>
 					</CardHeader>
-					<CardFooter>
-						<CardDescription>
-							Cartão de crédito selecionado: Nubank
-						</CardDescription>
-					</CardFooter>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">
+							<CardTitle className="font-normal text-sm text-gray-400">
 								Usuário mais gastador
 							</CardTitle>
 
-							<TrendingUp className="w-4 h-4" />
+							<p className="flex items-center gap-1 text-xs bg-emerald-300/10 text-emerald-500 px-1.5 py-1 rounded-sm">
+								<TrendingUp className="w-3 h-3" />
+								50.46%
+							</p>
 						</div>
 						<strong className="text-3xl font-semibold">R$100,00</strong>
 					</CardHeader>
-					<CardFooter>
-						<CardDescription>
-							Yale Henrique foi o maior gastador neste mês
-						</CardDescription>
-					</CardFooter>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">Total de compras</CardTitle>
+							<CardTitle className="font-normal text-sm">
+								Total de compras
+							</CardTitle>
 
-							<TrendingUp className="w-4 h-4" />
+							<p className="flex items-center gap-1 text-xs bg-emerald-300/10 text-emerald-500 px-1.5 py-1 rounded-sm">
+								<TrendingUp className="w-3 h-3" />
+								10%
+							</p>
 						</div>
 						<strong className="text-3xl font-semibold">77</strong>
 					</CardHeader>
-					<CardFooter>
-						<CardDescription>
-							Total de compras realizadas no cartão de crédito neste mês
-						</CardDescription>
-					</CardFooter>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal">
+							<CardTitle className="font-normal text-sm">
 								Usuários participantes
 							</CardTitle>
 
-							<TrendingUp className="w-4 h-4" />
+							<p className="flex items-center gap-1 text-xs bg-rose-300/10 text-rose-500 px-1.5 py-1 rounded-sm">
+								<TrendingDown className="w-3 h-3" />
+								10%
+							</p>
 						</div>
 						<strong className="text-3xl font-semibold">10</strong>
 					</CardHeader>
-					<CardFooter>
-						<CardDescription>
-							Número de usuários que utilizaram o cartão de crédito neste mês
-						</CardDescription>
-					</CardFooter>
 				</Card>
 			</div>
 
