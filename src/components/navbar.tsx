@@ -6,7 +6,7 @@ import {
 	ZapIcon,
 } from "lucide-react";
 import { useId, useState } from "react";
-
+import { useParams } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -23,15 +23,21 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 
+type Params = {
+	cardSlug: string;
+};
+
 // Navigation links array to be used in both desktop and mobile menus
-const navigationLinks = [
-	{ href: "overview", label: "Overview", active: true },
-	{ href: "uploads", label: "Uploads" },
-];
 
 export function Navbar() {
 	const id = useId();
 	const [checked, setChecked] = useState<boolean>(true);
+	const { cardSlug } = useParams<Params>();
+
+	const navigationLinks = [
+		{ href: "/app", label: "Home", active: !cardSlug },
+		{ href: "overview", label: "Overview", active: !!cardSlug },
+	];
 
 	return (
 		<header className="border-b px-4 md:px-6">
@@ -66,69 +72,77 @@ export function Navbar() {
 						{/* Navigation menu */}
 						<NavigationMenu className="h-full *:h-full max-md:hidden">
 							<NavigationMenuList className="h-full gap-2">
-								{navigationLinks.map((link) => (
-									<NavigationMenuItem key={link.href} className="h-full">
-										<NavigationMenuLink
-											active={link.active}
-											href={link.href}
-											className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-amber-500 data-[active]:border-b-amber-500 h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
-										>
-											{link.label}
-										</NavigationMenuLink>
-									</NavigationMenuItem>
-								))}
+								{navigationLinks.map((link) => {
+									const isActive = link.active;
+									if (!isActive) return null;
+
+									return (
+										<NavigationMenuItem key={link.href} className="h-full">
+											<NavigationMenuLink
+												active={link.active}
+												href={link.href}
+												className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-amber-500 data-[active]:border-b-amber-500 h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+											>
+												{link.label}
+											</NavigationMenuLink>
+										</NavigationMenuItem>
+									);
+								})}
 							</NavigationMenuList>
 						</NavigationMenu>
 					</div>
 				</div>
 				{/* Right side */}
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
-						<Badge variant="outline" className="gap-1.5 text-emerald-600">
-							<span
-								className="size-1.5 rounded-full bg-emerald-500"
-								aria-hidden="true"
-							></span>
-							Online
-						</Badge>
-						<Badge variant="outline" className="gap-1.5">
-							<ZapIcon
-								className="-ms-0.5 opacity-60"
-								size={12}
-								aria-hidden="true"
-							/>
-							99.9%
-						</Badge>
-						<Badge variant="outline" className="gap-1.5">
-							<ClockIcon
-								className="-ms-0.5 opacity-60"
-								size={12}
-								aria-hidden="true"
-							/>
-							45ms
-						</Badge>
-					</div>
-					{/* Switch */}
-					<div>
-						<div className="relative inline-grid h-7 grid-cols-[1fr_1fr] items-center text-sm font-medium">
-							<Switch
-								id={id}
-								checked={checked}
-								onCheckedChange={setChecked}
-								className="peer data-[state=unchecked]:bg-input/50 absolute inset-0 h-[inherit] w-auto [&_span]:z-10 [&_span]:h-full [&_span]:w-1/2 [&_span]:transition-transform [&_span]:duration-300 [&_span]:ease-[cubic-bezier(0.16,1,0.3,1)] [&_span]:data-[state=checked]:translate-x-full [&_span]:data-[state=checked]:rtl:-translate-x-full"
-							/>
-							<span className="pointer-events-none relative ms-0.5 flex w-6 items-center justify-center text-center transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] peer-data-[state=checked]:invisible peer-data-[state=unchecked]:translate-x-full peer-data-[state=unchecked]:rtl:-translate-x-full">
-								<PowerOffIcon size={12} aria-hidden="true" />
-							</span>
-							<span className="peer-data-[state=checked]:text-background pointer-events-none relative me-0.5 flex w-6 items-center justify-center text-center transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] peer-data-[state=checked]:-translate-x-full peer-data-[state=unchecked]:invisible peer-data-[state=checked]:rtl:translate-x-full">
-								<PowerIcon size={12} aria-hidden="true" />
-							</span>
+
+				{cardSlug && (
+					<div className="flex items-center gap-4">
+						<div className="flex items-center gap-2">
+							<Badge variant="outline" className="gap-1.5 text-emerald-600">
+								<span
+									className="size-1.5 rounded-full bg-emerald-500"
+									aria-hidden="true"
+								></span>
+								Online
+							</Badge>
+							<Badge variant="outline" className="gap-1.5">
+								<ZapIcon
+									className="-ms-0.5 opacity-60"
+									size={12}
+									aria-hidden="true"
+								/>
+								99.9%
+							</Badge>
+							<Badge variant="outline" className="gap-1.5">
+								<ClockIcon
+									className="-ms-0.5 opacity-60"
+									size={12}
+									aria-hidden="true"
+								/>
+								45ms
+							</Badge>
 						</div>
-						<Label htmlFor={id} className="sr-only">
-							Power
-						</Label>
+						{/* Switch */}
+						<div>
+							<div className="relative inline-grid h-7 grid-cols-[1fr_1fr] items-center text-sm font-medium">
+								<Switch
+									id={id}
+									checked={checked}
+									onCheckedChange={setChecked}
+									className="peer data-[state=unchecked]:bg-input/50 absolute inset-0 h-[inherit] w-auto [&_span]:z-10 [&_span]:h-full [&_span]:w-1/2 [&_span]:transition-transform [&_span]:duration-300 [&_span]:ease-[cubic-bezier(0.16,1,0.3,1)] [&_span]:data-[state=checked]:translate-x-full [&_span]:data-[state=checked]:rtl:-translate-x-full"
+								/>
+								<span className="pointer-events-none relative ms-0.5 flex w-6 items-center justify-center text-center transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] peer-data-[state=checked]:invisible peer-data-[state=unchecked]:translate-x-full peer-data-[state=unchecked]:rtl:-translate-x-full">
+									<PowerOffIcon size={12} aria-hidden="true" />
+								</span>
+								<span className="peer-data-[state=checked]:text-background pointer-events-none relative me-0.5 flex w-6 items-center justify-center text-center transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] peer-data-[state=checked]:-translate-x-full peer-data-[state=unchecked]:invisible peer-data-[state=checked]:rtl:translate-x-full">
+									<PowerIcon size={12} aria-hidden="true" />
+								</span>
+							</div>
+							<Label htmlFor={id} className="sr-only">
+								Power
+							</Label>
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</header>
 	);
