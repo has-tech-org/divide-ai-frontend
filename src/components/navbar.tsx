@@ -25,9 +25,8 @@ import { Switch } from "@/components/ui/switch";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-	{ href: "/app", label: "Overview", active: true },
-	{ href: "/app/graphs", label: "Graphs" },
-	{ href: "/app/backups", label: "Backups" },
+	{ href: "overview", label: "Overview", active: true },
+	{ href: "uploads", label: "Uploads" },
 ];
 
 export function Navbar() {
@@ -72,7 +71,7 @@ export function Navbar() {
 										<NavigationMenuLink
 											active={link.active}
 											href={link.href}
-											className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-amber-500 h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+											className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-amber-500 data-[active]:border-b-amber-500 h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
 										>
 											{link.label}
 										</NavigationMenuLink>
