@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import { CardPage } from "./pages/app/card-page";
-import { Home } from "./pages/app/home";
+import { Home } from "./pages/app/home-page";
 import { SignIn } from "./pages/auth/sign-in";
 import { SignUp } from "./pages/auth/sign-up";
 import { AppLayout } from "./pages/layouts/app-layout";
