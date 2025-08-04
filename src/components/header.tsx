@@ -1,5 +1,6 @@
 import { ChevronsUpDown } from "lucide-react";
 import { Select as SelectPrimitive } from "radix-ui";
+import { useNavigate, useParams } from "react-router";
 import { Logo } from "@/components/navbar-components/logo";
 import NotificationMenu from "@/components/navbar-components/notification-menu";
 import UserMenu from "@/components/navbar-components/user-menu";
@@ -24,10 +25,25 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useGetProfile } from "@/features/authentication/hooks/use-get-profile";
+import { useFetchAvailableCards } from "@/features/cards/hooks/use-fetch-available-cards";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+
+type Params = {
+	cardSlug: string;
+};
 
 export function Header() {
 	const { data: profile } = useGetProfile();
+	const { data: availableCards } = useFetchAvailableCards();
+
+	const hasCards = !!availableCards && availableCards?.length > 0;
+
+	const navigate = useNavigate();
+	const { cardSlug } = useParams<Params>();
+
+	const handleChangeCard = (value: string) => {
+		navigate(`/app/${value}/overview`);
+	};
 
 	return (
 		<header className="px-4 md:px-6">
@@ -80,28 +96,35 @@ export function Header() {
 								</span>
 							</BreadcrumbItem>
 
-							<BreadcrumbSeparator className="text-gray-700">
-								{" "}
-								/{" "}
-							</BreadcrumbSeparator>
-							<BreadcrumbItem>
-								<Select defaultValue="1">
-									<SelectPrimitive.SelectTrigger
-										aria-label="Select project"
-										className="flex items-center gap-1"
-									>
-										<SelectValue placeholder="Select project" />
-										<ChevronsUpDown
-											size={14}
-											className="text-muted-foreground/80"
-										/>
-									</SelectPrimitive.SelectTrigger>
-									<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
-										<SelectItem value="1">Main project</SelectItem>
-										<SelectItem value="2">Origin project</SelectItem>
-									</SelectContent>
-								</Select>
-							</BreadcrumbItem>
+							{hasCards && (
+								<>
+									<BreadcrumbSeparator className="text-gray-700">
+										{" "}
+										/{" "}
+									</BreadcrumbSeparator>
+									<BreadcrumbItem>
+										<Select value={cardSlug} onValueChange={handleChangeCard}>
+											<SelectPrimitive.SelectTrigger
+												aria-label="Select project"
+												className="flex items-center gap-1"
+											>
+												<SelectValue placeholder="Selecione um cartão" />
+												<ChevronsUpDown
+													size={14}
+													className="text-muted-foreground/80"
+												/>
+											</SelectPrimitive.SelectTrigger>
+											<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
+												{availableCards?.map((card) => (
+													<SelectItem key={card.slug} value={card.slug}>
+														{card.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</BreadcrumbItem>
+								</>
+							)}
 						</BreadcrumbList>
 					</Breadcrumb>
 				</div>
@@ -110,7 +133,11 @@ export function Header() {
 					{/* Notification */}
 					<NotificationMenu />
 					{/* User menu */}
-					<UserMenu />
+					<UserMenu
+						name={profile?.user?.name ?? ""}
+						email={profile?.user?.email ?? ""}
+						avatar={profile?.user?.avatar ?? ""}
+					/>
 				</div>
 			</div>
 		</header>
