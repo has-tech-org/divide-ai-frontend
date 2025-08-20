@@ -1,6 +1,12 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
-import { ChartAreaInteractive } from "@/components/home-chart";
+import { Tag, TrendingUp } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import {
 	Table,
 	TableBody,
@@ -18,7 +24,7 @@ export const CardPage = () => {
 					<CardHeader>
 						<div className="flex items-center justify-between">
 							<CardTitle className="font-normal text-sm text-gray-400">
-								Despesas totais
+								Última fatura
 							</CardTitle>
 
 							<p className="flex items-center gap-1 text-xs bg-emerald-300/10 text-emerald-500 px-1.5 py-1 rounded-sm">
@@ -34,7 +40,7 @@ export const CardPage = () => {
 					<CardHeader>
 						<div className="flex items-center justify-between">
 							<CardTitle className="font-normal text-sm text-gray-400">
-								Usuário mais gastador
+								Minhas compras
 							</CardTitle>
 
 							<p className="flex items-center gap-1 text-xs bg-emerald-300/10 text-emerald-500 px-1.5 py-1 rounded-sm">
@@ -49,37 +55,60 @@ export const CardPage = () => {
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal text-sm">
-								Total de compras
+							<CardTitle className="font-normal text-sm text-gray-400">
+								Mais longa parcela
 							</CardTitle>
 
-							<p className="flex items-center gap-1 text-xs bg-emerald-300/10 text-emerald-500 px-1.5 py-1 rounded-sm">
-								<TrendingUp className="w-3 h-3" />
-								10%
+							<p className="flex items-center gap-1 text-xs bg-amber-300/10 text-amber-500 px-1.5 py-1 rounded-sm">
+								<Tag className="w-3 h-3" />
+								6/12
 							</p>
 						</div>
-						<strong className="text-3xl font-semibold">77</strong>
+						<strong className="text-3xl font-semibold">R$100,00</strong>
 					</CardHeader>
 				</Card>
 
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
-							<CardTitle className="font-normal text-sm">
-								Usuários participantes
+							<CardTitle className="font-normal text-sm text-gray-400">
+								Maior parcela
 							</CardTitle>
 
-							<p className="flex items-center gap-1 text-xs bg-rose-300/10 text-rose-500 px-1.5 py-1 rounded-sm">
-								<TrendingDown className="w-3 h-3" />
-								10%
+							<p className="flex items-center gap-1 text-xs bg-amber-300/10 text-amber-500 px-1.5 py-1 rounded-sm">
+								<Tag className="w-3 h-3" />
+								6/12
 							</p>
 						</div>
-						<strong className="text-3xl font-semibold">10</strong>
+						<strong className="text-3xl font-semibold">R$100,00</strong>
 					</CardHeader>
 				</Card>
 			</div>
 
-			<ChartAreaInteractive />
+			<header className="flex items-center justify-between px-8">
+				<h2 className="text-2xl font-semibold">Faturas</h2>
+				<div className="flex items-center gap-2">
+					<Select>
+						<SelectTrigger>
+							<SelectValue placeholder="Selecione uma fatura" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="1">Janeiro</SelectItem>
+							<SelectItem value="2">Fevereiro</SelectItem>
+							<SelectItem value="3">Março</SelectItem>
+							<SelectItem value="4">Abril</SelectItem>
+							<SelectItem value="5">Maio</SelectItem>
+							<SelectItem value="6">Junho</SelectItem>
+							<SelectItem value="7">Julho</SelectItem>
+							<SelectItem value="8">Agosto</SelectItem>
+							<SelectItem value="9">Setembro</SelectItem>
+							<SelectItem value="10">Outubro</SelectItem>
+							<SelectItem value="11">Novembro</SelectItem>
+							<SelectItem value="12">Dezembro</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+			</header>
 
 			<div>
 				<Table>
