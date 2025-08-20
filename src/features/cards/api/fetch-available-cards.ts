@@ -1,22 +1,36 @@
 import { api } from "@/lib/api";
 
-type Response = {
+type Role = "DEPENDENT" | "ADMIN";
+
+type Card = {
 	id: string;
 	name: string;
 	slug: string;
+	user_id: string;
+	description: string;
 	bank: string;
+	last_digits: string;
 	flag: string;
-	deletedAt: string | null;
-	createdAt: string;
-	updatedAt: string;
-
-	card_users: {
-		id: string;
-		role: string;
-	}[];
+	closing_day: number;
+	payment_day: number;
+	limit: number;
+	is_active: boolean;
+	created_at: string;
+	updated_at: string;
+	deleted_at: string | null;
+	role: Role;
 };
 
-export const fetchAvailableCards = async () => {
-	const response = await api.get<Response[]>("/cards/available");
+type Response = {
+	adminCards: Card[];
+	dependentCards: Card[];
+	allCards: Card[];
+	totalCards: number;
+	totalAdminCards: number;
+	totalDependentCards: number;
+};
+
+export const fetchCards = async () => {
+	const response = await api.get<Response>("/cards");
 	return response.data;
 };
