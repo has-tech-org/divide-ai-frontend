@@ -25,7 +25,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useGetProfile } from "@/features/authentication/hooks/use-get-profile";
-import { useFetchAvailableCards } from "@/features/cards/hooks/use-fetch-available-cards";
+import { useFetchCards } from "@/features/cards/hooks/use-fetch-cards";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type Params = {
@@ -34,9 +34,9 @@ type Params = {
 
 export function Header() {
 	const { data: profile } = useGetProfile();
-	const { data: availableCards } = useFetchAvailableCards();
+	const { data } = useFetchCards();
 
-	const hasCards = !!availableCards && availableCards?.length > 0;
+	const hasCards = !!data && data?.allCards?.length > 0;
 
 	const navigate = useNavigate();
 	const { cardSlug } = useParams<Params>();
@@ -115,7 +115,7 @@ export function Header() {
 												/>
 											</SelectPrimitive.SelectTrigger>
 											<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
-												{availableCards?.map((card) => (
+												{data?.allCards?.map((card) => (
 													<SelectItem key={card.slug} value={card.slug}>
 														{card.name}
 													</SelectItem>
