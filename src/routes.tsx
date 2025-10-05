@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router";
-import { CardPage } from "./pages/app/card-page";
 import { HomePage } from "./pages/app/home-page";
+import { OverviewPage } from "./pages/app/overview-page";
+import { UploadsPage } from "./pages/app/uploads-page";
 import { SignIn } from "./pages/auth/sign-in";
 import { SignUp } from "./pages/auth/sign-up";
 import { AppLayout } from "./pages/layouts/app-layout";
@@ -16,7 +17,8 @@ export const AppRoutes = () => {
 
 			<Route path="/app" element={<AppLayout />}>
 				<Route index element={<HomePage />} />
-				<Route path="/app/:cardSlug/overview" element={<CardPage />} />
+				<Route path="/app/:cardSlug/overview" element={<OverviewPage />} />
+				<Route path="/app/:cardSlug/uploads" element={<UploadsPage />} />
 			</Route>
 		</Routes>
 	);
