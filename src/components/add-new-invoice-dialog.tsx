@@ -1,5 +1,8 @@
-import { Upload, WalletIcon } from "lucide-react";
-import type { MouseEvent } from "react";
+import { isAxiosError } from "axios";
+import { Loader } from "lucide-react";
+import { useState } from "react";
+import { useParams } from "react-router";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -9,10 +12,23 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUploadInvoice } from "@/features/invoices/hooks/use-upload-invoice";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { FileUploader } from "./file-uploader";
 
-export function AddNewInvoiceDialog() {
+type Params = {
+	cardSlug: string;
+};
+
+interface AddNewInvoiceDialogProps {
+	children: React.ReactNode;
+}
+
+export function AddNewInvoiceDialog({ children }: AddNewInvoiceDialogProps) {
+	const [open, setOpen] = useState(false);
+	const { cardSlug } = useParams<Params>();
+	const { mutateAsync: uploadInvoice, isPending } = useUploadInvoice();
+
 	const [{ files, isDragging, errors }, actions] = useFileUpload({
 		accept: ".pdf",
 		maxSize: 10 * 1024 * 1024, // 10MB
@@ -21,50 +37,77 @@ export function AddNewInvoiceDialog() {
 
 	const [file] = files;
 
-	const handleClick = (event: MouseEvent) => {
-		event.preventDefault();
-		console.log(file);
+	const handleUpload = async () => {
+		if (!file) {
+			toast.error("Selecione um arquivo");
+			return;
+		}
+
+		if (!cardSlug) {
+			toast.error("Cartão não identificado");
+			return;
+		}
+
+		try {
+			await uploadInvoice({
+				file: file.file as File,
+				cardSlug: cardSlug,
+			});
+			toast.success("Fatura enviada com sucesso!");
+			setOpen(false);
+			actions.clearFiles();
+		} catch (error) {
+			if (isAxiosError(error)) {
+				if (error.response?.data?.message) {
+					return toast.error(error.response.data.message);
+				}
+			}
+			return toast.error("Erro ao enviar fatura");
+		}
 	};
 
 	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button variant="default" size="icon">
-					<Upload className="w-4 h-4" />
-				</Button>
-			</DialogTrigger>
-			<DialogContent>
-				<div className="flex flex-col gap-2">
-					<div
-						className="flex size-11 shrink-0 items-center justify-center rounded-full border"
-						aria-hidden="true"
-					>
-						<WalletIcon className="opacity-80" size={16} />
-					</div>
-					<DialogHeader>
-						<DialogTitle className="text-left">
-							Adicionar nova fatura
-						</DialogTitle>
-						<DialogDescription className="text-left">
-							Adicione uma nova fatura de cartão.
-						</DialogDescription>
-					</DialogHeader>
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>{children}</DialogTrigger>
+			<DialogContent className="max-w-md">
+				<DialogHeader>
+					<DialogTitle>Enviar Fatura</DialogTitle>
+					<DialogDescription>
+						Faça upload da fatura em PDF para processar automaticamente
+					</DialogDescription>
+				</DialogHeader>
 
-					<div className="space-y-4">
-						<FileUploader
-							files={files}
-							isDragging={isDragging}
-							errors={errors}
-							{...actions}
-						/>
+				<div className="space-y-4">
+					<FileUploader
+						files={files}
+						isDragging={isDragging}
+						errors={errors}
+						{...actions}
+					/>
 
+					<div className="flex gap-2 pt-4">
 						<Button
 							type="button"
-							className="w-full"
-							onClick={handleClick}
-							disabled={files.length === 0}
+							variant="outline"
+							className="flex-1"
+							onClick={() => {
+								setOpen(false);
+								actions.clearFiles();
+							}}
 						>
-							Salvar fatura
+							Cancelar
+						</Button>
+						<Button
+							type="button"
+							className="flex-1"
+							onClick={handleUpload}
+							disabled={files.length === 0 || isPending}
+						>
+							{isPending ? (
+								<Loader className="animate-spin w-4 h-4" />
+							) : (
+								"Enviar"
+							)}
 						</Button>
 					</div>
 				</div>
