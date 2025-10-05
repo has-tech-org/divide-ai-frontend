@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSignUp } from "../hooks/use-sign-up";
 
-const signInFormSchema = z.object({
+const signUpFormSchema = z.object({
 	email: z.string().email("Endereço de email inválido"),
 	name: z.string().min(5, "Nome completo deve ter pelo menos 5 caracteres"),
 	phone: z.string().min(11, "Telefone deve ter pelo menos 11 caracteres"),
 });
 
-type SignInFormData = z.infer<typeof signInFormSchema>;
+type SignUpFormData = z.infer<typeof signUpFormSchema>;
 
 export const SignUpForm = () => {
 	const navigate = useNavigate();
@@ -26,19 +26,34 @@ export const SignUpForm = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<SignInFormData>({
-		resolver: zodResolver(signInFormSchema),
+	} = useForm<SignUpFormData>({
+		resolver: zodResolver(signUpFormSchema),
 	});
 
-	const handleSignIn = handleSubmit(async (data) => {
+	const formatPhone = (value: string) => {
+		const numbers = value.replace(/\D/g, "");
+		if (numbers.length <= 10) {
+			return numbers.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+		}
+		return numbers.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
+	};
+
+	const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const formatted = formatPhone(e.target.value);
+		e.target.value = formatted;
+	};
+
+	const handleSignUp = handleSubmit(async (data) => {
 		try {
-			await signUp(data);
+			// Remove formatting before sending
+			const phoneNumbers = data.phone.replace(/\D/g, "");
+			await signUp({ ...data, phone: phoneNumbers });
 			toast.success("Conta criada com sucesso!");
 			navigate("/");
 		} catch (error) {
 			if (isAxiosError(error)) {
 				if (error.status === 409) {
-					return toast.error(error.response?.data.message);
+					return toast.error("Este email já foi cadastrado anteriormente");
 				}
 			}
 
@@ -47,9 +62,9 @@ export const SignUpForm = () => {
 	});
 
 	return (
-		<form className="w-full space-y-4" onSubmit={handleSignIn}>
+		<form className="w-full space-y-4" onSubmit={handleSignUp}>
 			<div className="space-y-2">
-				<Label htmlFor="email" className="block">
+				<Label htmlFor="name" className="block">
 					Nome completo
 				</Label>
 				<Input id="name" {...register("name")} placeholder="John Doe" />
@@ -76,6 +91,8 @@ export const SignUpForm = () => {
 					id="phone"
 					{...register("phone")}
 					placeholder="(11) 99999-9999"
+					onChange={handlePhoneChange}
+					maxLength={15}
 				/>
 				<span className="text-red-500 text-sm">{errors.phone?.message}</span>
 			</div>
