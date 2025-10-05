@@ -2,6 +2,7 @@ import { CreditCard, Crown, Users } from "lucide-react";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { AddCardDialog } from "@/features/cards/components/add-card-dialog";
 import { useFetchCards } from "@/features/cards/hooks/use-fetch-cards";
 
 export const HomePage = () => {
@@ -63,7 +64,10 @@ export const HomePage = () => {
 
 			{/* Cards Section */}
 			<div className="space-y-4">
-				<h3 className="text-lg font-semibold px-1">Cartões Disponíveis</h3>
+				<div className="flex items-center justify-between px-1">
+					<h3 className="text-lg font-semibold">Cartões Disponíveis</h3>
+					<AddCardDialog />
+				</div>
 
 				{data?.allCards && data.allCards.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
