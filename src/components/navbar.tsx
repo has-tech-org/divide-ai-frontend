@@ -3,10 +3,14 @@ import {
 	MenuIcon,
 	PowerIcon,
 	PowerOffIcon,
+	Upload,
+	UserPlus,
 	ZapIcon,
 } from "lucide-react";
 import { useId, useState } from "react";
 import { useParams } from "react-router";
+import { AddMemberDialog } from "@/components/add-member-dialog";
+import { AddNewInvoiceDialog } from "@/components/add-new-invoice-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -36,7 +40,16 @@ export function Navbar() {
 
 	const navigationLinks = [
 		{ href: "/app", label: "Home", active: !cardSlug },
-		{ href: "overview", label: "Overview", active: !!cardSlug },
+		{
+			href: `/app/${cardSlug}/overview`,
+			label: "Overview",
+			active: !!cardSlug,
+		},
+		{
+			href: `/app/${cardSlug}/uploads`,
+			label: "Uploads",
+			active: !!cardSlug,
+		},
 	];
 
 	return (
@@ -79,7 +92,7 @@ export function Navbar() {
 									return (
 										<NavigationMenuItem key={link.href} className="h-full">
 											<NavigationMenuLink
-												active={link.active}
+												active={location.pathname === link.href}
 												href={link.href}
 												className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-amber-500 data-[active]:border-b-amber-500 h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
 											>
@@ -97,6 +110,16 @@ export function Navbar() {
 				{cardSlug && (
 					<div className="flex items-center gap-4">
 						<div className="flex items-center gap-2">
+							<AddMemberDialog cardSlug={cardSlug}>
+								<Button size="icon" variant="ghost">
+									<UserPlus className="w-4 h-4" />
+								</Button>
+							</AddMemberDialog>
+							<AddNewInvoiceDialog>
+								<Button size="icon" variant="ghost">
+									<Upload className="w-4 h-4" />
+								</Button>
+							</AddNewInvoiceDialog>
 							<Badge variant="outline" className="gap-1.5 text-emerald-600">
 								<span
 									className="size-1.5 rounded-full bg-emerald-500"
