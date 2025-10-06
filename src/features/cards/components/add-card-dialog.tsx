@@ -189,7 +189,7 @@ export const AddCardDialog = () => {
 							<Input
 								id="closingDay"
 								type="number"
-								{...register("closingDay")}
+								{...register("closingDay", { valueAsNumber: true })}
 								placeholder="15"
 								min={1}
 								max={31}
@@ -206,7 +206,7 @@ export const AddCardDialog = () => {
 							<Input
 								id="paymentDay"
 								type="number"
-								{...register("paymentDay")}
+								{...register("paymentDay", { valueAsNumber: true })}
 								placeholder="25"
 								min={1}
 								max={31}
@@ -224,7 +224,7 @@ export const AddCardDialog = () => {
 						<Input
 							id="limit"
 							type="number"
-							{...register("limit")}
+							{...register("limit", { valueAsNumber: true })}
 							placeholder="5000"
 							step="0.01"
 						/>
