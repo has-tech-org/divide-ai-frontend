@@ -1,10 +1,6 @@
 import {
-	Calendar,
 	Home,
-	Inbox,
 	LogOut,
-	Search,
-	Settings,
 	User,
 } from "lucide-react";
 import { Logo } from "@/components/navbar-components/logo";

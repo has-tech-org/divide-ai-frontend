@@ -26,7 +26,7 @@ export const AppLayout = () => {
 	}, [navigate]);
 
 	return (
-		<div className="h-svh bg-zinc-900">
+		<div className="h-svh bg-zinc-900 overflow-y-auto">
 			<Header />
 			<Navbar />
 			<main className="max-w-7xl w-full mx-auto relative px-4 my-8">

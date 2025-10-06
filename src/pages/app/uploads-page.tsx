@@ -3,8 +3,17 @@ import { useParams } from "react-router";
 
 import { AddNewInvoiceDialog } from "@/components/add-new-invoice-dialog";
 import { Badge } from "@/components/ui/badge";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useFetchCardBySlug } from "@/features/cards/hooks/use-fetch-card-by-slug";
 import {
 	Table,
 	TableBody,
@@ -32,6 +41,7 @@ const statusMap = {
 
 export const UploadsPage = () => {
 	const { cardSlug } = useParams<Params>();
+	const { data: cardData } = useFetchCardBySlug(cardSlug || "");
 	const { data, isLoading } = useFetchInvoices(cardSlug || "");
 
 	const formatDate = (dateString: string) => {
@@ -47,6 +57,25 @@ export const UploadsPage = () => {
 
 	return (
 		<div className="h-full space-y-6 mb-10">
+			{/* Breadcrumb */}
+			{cardData?.card && (
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="/app">Cartões</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>{cardData.card.name}</BreadcrumbPage>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Faturas</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			)}
+
 			{/* Header */}
 			<div className="flex items-center justify-between">
 				<div className="space-y-1">

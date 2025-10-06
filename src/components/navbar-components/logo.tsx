@@ -10,8 +10,8 @@ export function Logo({ className }: LogoProps) {
 		<div className="flex items-center gap-2">
 			<TrendingUp className="w-5 h-5" />
 			<span className={cn("text-xl font-semibold tracking-tight", className)}>
-				divide
-				<span className="text-amber-500">.aí</span>{" "}
+				fatia
+				<span className="text-amber-500">-app</span>{" "}
 				<span className="text-xs text-muted-foreground font-normal">
 					{" "}
 					v0.0.1
