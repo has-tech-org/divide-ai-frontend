@@ -119,4 +119,29 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+	/* Minimalistic scrollbar styles */
+	*::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+
+	*::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	*::-webkit-scrollbar-thumb {
+		background: oklch(0.552 0.016 285.938 / 0.3);
+		border-radius: 3px;
+	}
+
+	*::-webkit-scrollbar-thumb:hover {
+		background: oklch(0.552 0.016 285.938 / 0.5);
+	}
+
+	/* Firefox scrollbar */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: oklch(0.552 0.016 285.938 / 0.3) transparent;
+	}
 }
