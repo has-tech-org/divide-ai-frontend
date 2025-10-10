@@ -102,9 +102,7 @@ export function FileUploader({
 								aria-hidden="true"
 							/>
 							<div className="min-w-0">
-								<p className="truncate text-[13px] font-medium">
-									{file.file.name}
-								</p>
+								<p className="text-[13px] font-medium">{file.file.name}</p>
 							</div>
 						</div>
 
