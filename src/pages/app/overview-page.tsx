@@ -1,9 +1,8 @@
-import { Calendar, CreditCard, Loader, UserCog, UserPlus, Users } from "lucide-react";
+import { Calendar, CreditCard, Loader, UserPlus, Users } from "lucide-react";
 import React, { useState } from "react";
 import { useParams } from "react-router";
 
 import { AddMemberDialog } from "@/components/add-member-dialog";
-import { ReassignExpenseDialog } from "@/components/reassign-expense-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +21,7 @@ import { useFetchInvoices } from "@/features/invoices/hooks/use-fetch-invoices";
 import { useFetchInvoiceSummary } from "@/features/invoices/hooks/use-fetch-invoice-summary";
 import { useFetchExpenses } from "@/features/invoices/hooks/use-fetch-expenses";
 import type { CardFlag } from "@/features/cards/api/create-card";
-import type { Expense } from "@/features/invoices/api/fetch-expenses";
+import type { Expense, ExpenseCategory } from "@/features/invoices/api/fetch-expenses";
 import type { Invoice } from "@/features/invoices/api/fetch-invoices";
 import {
 	Select,
@@ -39,6 +38,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { ExpenseFilters } from "@/components/expense-filters";
+import { ExpenseDetailSheet } from "@/components/expense-detail-sheet";
+import { ExpenseTableSkeleton } from "@/components/expense-table-skeleton";
+import { Pagination } from "@/components/ui/pagination";
+import { CategoryIcon } from "@/components/category-icon";
 
 type Params = {
 	cardSlug: string;
@@ -81,19 +85,45 @@ export const OverviewPage = () => {
 		month: selectedMonth,
 	});
 
-	// Fetch all expenses for selected month
-	const { data: allExpensesData } = useFetchExpenses({
-		cardSlug: cardSlug || "",
-		month: selectedMonth,
-		filter: "all",
-	});
+	// Filter state
+	const [myExpensesSearchQuery, setMyExpensesSearchQuery] = useState("");
+	const [myExpensesCategory, setMyExpensesCategory] = useState<
+		ExpenseCategory | "all"
+	>("all");
+	const [allExpensesSearchQuery, setAllExpensesSearchQuery] = useState("");
+	const [allExpensesCategory, setAllExpensesCategory] = useState<
+		ExpenseCategory | "all"
+	>("all");
 
-	// Fetch my expenses for selected month
-	const { data: myExpensesData } = useFetchExpenses({
-		cardSlug: cardSlug || "",
-		month: selectedMonth,
-		filter: "mine",
-	});
+	// Pagination state
+	const [myExpensesPage, setMyExpensesPage] = useState(1);
+	const [myExpensesPerPage, setMyExpensesPerPage] = useState(10);
+	const [allExpensesPage, setAllExpensesPage] = useState(1);
+	const [allExpensesPerPage, setAllExpensesPerPage] = useState(10);
+
+	// Fetch all expenses for selected month with server-side filtering
+	const { data: allExpensesData, isLoading: isLoadingAllExpenses } =
+		useFetchExpenses({
+			cardSlug: cardSlug || "",
+			month: selectedMonth,
+			filter: "all",
+			category: allExpensesCategory !== "all" ? allExpensesCategory : undefined,
+			search: allExpensesSearchQuery || undefined,
+			page: allExpensesPage,
+			limit: allExpensesPerPage,
+		});
+
+	// Fetch my expenses for selected month with server-side filtering
+	const { data: myExpensesData, isLoading: isLoadingMyExpenses } =
+		useFetchExpenses({
+			cardSlug: cardSlug || "",
+			month: selectedMonth,
+			filter: "mine",
+			category: myExpensesCategory !== "all" ? myExpensesCategory : undefined,
+			search: myExpensesSearchQuery || undefined,
+			page: myExpensesPage,
+			limit: myExpensesPerPage,
+		});
 
 	const formatCurrency = (value: number | null) => {
 		if (value === null) return "N/A";
@@ -115,19 +145,6 @@ export const OverviewPage = () => {
 		return colors[flag] || colors.OTHER;
 	};
 
-	const getCategoryLabel = (category: string) => {
-		const categories: Record<string, string> = {
-			food: "Alimentação",
-			shopping: "Compras",
-			transport: "Transporte",
-			entertainment: "Entretenimento",
-			health: "Saúde",
-			education: "Educação",
-			other: "Outros",
-		};
-		return categories[category] || "Outros";
-	};
-
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleDateString("pt-BR");
 	};
@@ -143,44 +160,60 @@ export const OverviewPage = () => {
 		return `${capitalizedMonth}`;
 	};
 
-	// Get expenses from API responses
+	// Get data from server responses (already filtered and paginated)
 	const myExpenses = myExpensesData?.expenses || [];
+	const myExpensesPagination = myExpensesData?.pagination || {
+		page: 1,
+		limit: 10,
+		total: 0,
+		pages: 0,
+	};
+
 	const allExpenses = allExpensesData?.expenses || [];
+	const allExpensesPagination = allExpensesData?.pagination || {
+		page: 1,
+		limit: 10,
+		total: 0,
+		pages: 0,
+	};
+
+	// Reset page when filters change
+	React.useEffect(() => {
+		setMyExpensesPage(1);
+	}, [myExpensesSearchQuery, myExpensesCategory]);
+
+	React.useEffect(() => {
+		setAllExpensesPage(1);
+	}, [allExpensesSearchQuery, allExpensesCategory]);
 
 	const renderExpenseRow = (expense: Expense) => (
-		<TableRow key={expense.id}>
-			<TableCell className="font-medium">{expense.description}</TableCell>
-			<TableCell className="text-muted-foreground">
-				{formatDate(expense.date)}
-			</TableCell>
-			<TableCell>
-				<Badge variant="outline" className="text-xs">
-					{getCategoryLabel(expense.category)}
-				</Badge>
-			</TableCell>
-			<TableCell className="text-muted-foreground">
-				{expense.owner.name}
-			</TableCell>
-			<TableCell className="text-center text-muted-foreground">
-				{expense.installmentNumber && expense.totalInstallments
-					? `${expense.installmentNumber}/${expense.totalInstallments}`
-					: "À vista"}
-			</TableCell>
-			<TableCell className="text-right font-medium">
-				{formatCurrency(expense.amount)}
-			</TableCell>
-			<TableCell className="text-center">
-				<ReassignExpenseDialog
-					expense={expense}
-					cardSlug={cardSlug || ""}
-					month={selectedMonth}
-				>
-					<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-						<UserCog className="w-4 h-4" />
-					</Button>
-				</ReassignExpenseDialog>
-			</TableCell>
-		</TableRow>
+		<ExpenseDetailSheet
+			key={expense.id}
+			expense={expense}
+			cardSlug={cardSlug || ""}
+			month={selectedMonth}
+		>
+			<TableRow className="cursor-pointer hover:bg-muted/50 transition-colors">
+				<TableCell className="font-medium">{expense.description}</TableCell>
+				<TableCell className="text-muted-foreground">
+					{formatDate(expense.date)}
+				</TableCell>
+				<TableCell>
+					<CategoryIcon category={expense.category} size="sm" />
+				</TableCell>
+				<TableCell className="text-muted-foreground">
+					{expense.owner.name}
+				</TableCell>
+				<TableCell className="text-center text-muted-foreground">
+					{expense.installmentNumber && expense.totalInstallments
+						? `${expense.installmentNumber}/${expense.totalInstallments}`
+						: "À vista"}
+				</TableCell>
+				<TableCell className="text-right font-medium">
+					{formatCurrency(expense.amount)}
+				</TableCell>
+			</TableRow>
+		</ExpenseDetailSheet>
 	);
 
 	if (isLoading) {
@@ -361,11 +394,11 @@ export const OverviewPage = () => {
 
 			{/* Summary Cards */}
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<Card className="border-border/50">
+				<Card className="border-border/50 bg-gradient-to-br from-blue-500/5 to-blue-500/10">
 					<CardContent>
 						<div className="space-y-1">
 							<p className="text-sm text-muted-foreground">Total da Fatura</p>
-							<p className="text-3xl font-bold">
+							<p className="text-3xl font-bold text-blue-600">
 								{summaryData?.summary
 									? formatCurrency(summaryData.summary.totalInvoice)
 									: "R$ 0,00"}
@@ -374,11 +407,11 @@ export const OverviewPage = () => {
 					</CardContent>
 				</Card>
 
-				<Card className="border-border/50">
+				<Card className="border-border/50 bg-gradient-to-br from-green-500/5 to-green-500/10">
 					<CardContent>
 						<div className="space-y-1">
 							<p className="text-sm text-muted-foreground">Minhas Despesas</p>
-							<p className="text-3xl font-bold">
+							<p className="text-3xl font-bold text-green-600">
 								{summaryData?.summary
 									? formatCurrency(summaryData.summary.totalUser)
 									: "R$ 0,00"}
@@ -387,13 +420,13 @@ export const OverviewPage = () => {
 					</CardContent>
 				</Card>
 
-				<Card className="border-border/50">
+				<Card className="border-border/50 bg-gradient-to-br from-orange-500/5 to-orange-500/10">
 					<CardContent>
 						<div className="space-y-1">
 							<p className="text-sm text-muted-foreground">
 								Despesas de Outros
 							</p>
-							<p className="text-3xl font-bold">
+							<p className="text-3xl font-bold text-orange-600">
 								{summaryData?.summary
 									? formatCurrency(summaryData.summary.totalOthers)
 									: "R$ 0,00"}
@@ -438,68 +471,130 @@ export const OverviewPage = () => {
 					</TabsList>
 
 					{/* My Expenses Tab */}
-					<TabsContent value="my-expenses">
+					<TabsContent value="my-expenses" className="space-y-4">
+						<ExpenseFilters
+							searchQuery={myExpensesSearchQuery}
+							onSearchChange={setMyExpensesSearchQuery}
+							selectedCategory={myExpensesCategory}
+							onCategoryChange={setMyExpensesCategory}
+							totalResults={myExpensesPagination.total}
+						/>
+
 						<Card className="border-border/50">
-							<Table>
-								<TableHeader>
-									<TableRow className="hover:bg-transparent">
-										<TableHead>Descrição</TableHead>
-										<TableHead>Data</TableHead>
-										<TableHead>Categoria</TableHead>
-										<TableHead>Responsável</TableHead>
-										<TableHead className="text-center">Parcela</TableHead>
-										<TableHead className="text-right">Valor</TableHead>
-										<TableHead className="text-center">Ações</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{myExpenses.length > 0 ? (
-										myExpenses.map(renderExpenseRow)
-									) : (
-										<TableRow>
-											<TableCell
-												colSpan={7}
-												className="text-center text-muted-foreground py-8"
-											>
-												Nenhuma despesa encontrada para este mês
-											</TableCell>
-										</TableRow>
+							{isLoadingMyExpenses ? (
+								<ExpenseTableSkeleton />
+							) : (
+								<>
+									<Table>
+										<TableHeader>
+											<TableRow className="hover:bg-transparent">
+												<TableHead>Descrição</TableHead>
+												<TableHead>Data</TableHead>
+												<TableHead>Categoria</TableHead>
+												<TableHead>Responsável</TableHead>
+												<TableHead className="text-center">Parcela</TableHead>
+												<TableHead className="text-right">Valor</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{myExpenses.length > 0 ? (
+												myExpenses.map(renderExpenseRow)
+											) : (
+												<TableRow>
+													<TableCell
+														colSpan={6}
+														className="text-center text-muted-foreground py-8"
+													>
+														{myExpensesSearchQuery || myExpensesCategory !== "all"
+															? "Nenhuma despesa encontrada com os filtros aplicados"
+															: "Nenhuma despesa encontrada para este mês"}
+													</TableCell>
+												</TableRow>
+											)}
+										</TableBody>
+									</Table>
+
+									{myExpensesPagination.total > 0 && (
+										<div className="p-4 border-t">
+											<Pagination
+												currentPage={myExpensesPagination.page}
+												totalPages={myExpensesPagination.pages}
+												totalItems={myExpensesPagination.total}
+												itemsPerPage={myExpensesPagination.limit}
+												onPageChange={setMyExpensesPage}
+												onItemsPerPageChange={(perPage) => {
+													setMyExpensesPerPage(perPage);
+													setMyExpensesPage(1);
+												}}
+											/>
+										</div>
 									)}
-								</TableBody>
-							</Table>
+								</>
+							)}
 						</Card>
 					</TabsContent>
 
 					{/* All Expenses Tab */}
-					<TabsContent value="all-expenses">
+					<TabsContent value="all-expenses" className="space-y-4">
+						<ExpenseFilters
+							searchQuery={allExpensesSearchQuery}
+							onSearchChange={setAllExpensesSearchQuery}
+							selectedCategory={allExpensesCategory}
+							onCategoryChange={setAllExpensesCategory}
+							totalResults={allExpensesPagination.total}
+						/>
+
 						<Card className="border-border/50">
-							<Table>
-								<TableHeader>
-									<TableRow className="hover:bg-transparent">
-										<TableHead>Descrição</TableHead>
-										<TableHead>Data</TableHead>
-										<TableHead>Categoria</TableHead>
-										<TableHead>Responsável</TableHead>
-										<TableHead className="text-center">Parcela</TableHead>
-										<TableHead className="text-right">Valor</TableHead>
-										<TableHead className="text-center">Ações</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{allExpenses.length > 0 ? (
-										allExpenses.map(renderExpenseRow)
-									) : (
-										<TableRow>
-											<TableCell
-												colSpan={7}
-												className="text-center text-muted-foreground py-8"
-											>
-												Nenhuma despesa encontrada para este mês
-											</TableCell>
-										</TableRow>
+							{isLoadingAllExpenses ? (
+								<ExpenseTableSkeleton />
+							) : (
+								<>
+									<Table>
+										<TableHeader>
+											<TableRow className="hover:bg-transparent">
+												<TableHead>Descrição</TableHead>
+												<TableHead>Data</TableHead>
+												<TableHead>Categoria</TableHead>
+												<TableHead>Responsável</TableHead>
+												<TableHead className="text-center">Parcela</TableHead>
+												<TableHead className="text-right">Valor</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{allExpenses.length > 0 ? (
+												allExpenses.map(renderExpenseRow)
+											) : (
+												<TableRow>
+													<TableCell
+														colSpan={6}
+														className="text-center text-muted-foreground py-8"
+													>
+														{allExpensesSearchQuery || allExpensesCategory !== "all"
+															? "Nenhuma despesa encontrada com os filtros aplicados"
+															: "Nenhuma despesa encontrada para este mês"}
+													</TableCell>
+												</TableRow>
+											)}
+										</TableBody>
+									</Table>
+
+									{allExpensesPagination.total > 0 && (
+										<div className="p-4 border-t">
+											<Pagination
+												currentPage={allExpensesPagination.page}
+												totalPages={allExpensesPagination.pages}
+												totalItems={allExpensesPagination.total}
+												itemsPerPage={allExpensesPagination.limit}
+												onPageChange={setAllExpensesPage}
+												onItemsPerPageChange={(perPage) => {
+													setAllExpensesPerPage(perPage);
+													setAllExpensesPage(1);
+												}}
+											/>
+										</div>
 									)}
-								</TableBody>
-							</Table>
+								</>
+							)}
 						</Card>
 					</TabsContent>
 				</Tabs>
