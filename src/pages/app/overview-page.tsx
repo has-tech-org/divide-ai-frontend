@@ -1,10 +1,14 @@
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 import { Calendar, CreditCard, Loader, UserPlus, Users } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import { AddMemberDialog } from "@/components/add-member-dialog";
+import { CategoryIcon } from "@/components/category-icon";
+import { ExpenseDetailSheet } from "@/components/expense-detail-sheet";
+import { ExpenseFilters } from "@/components/expense-filters";
+import { ExpenseTableSkeleton } from "@/components/expense-table-skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,16 +17,10 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useFetchCardBySlug } from "@/features/cards/hooks/use-fetch-card-by-slug";
-import { useFetchInvoices } from "@/features/invoices/hooks/use-fetch-invoices";
-import { useFetchInvoiceSummary } from "@/features/invoices/hooks/use-fetch-invoice-summary";
-import { useFetchExpenses } from "@/features/invoices/hooks/use-fetch-expenses";
-import type { CardFlag } from "@/features/cards/api/create-card";
-import type { Expense, ExpenseCategory } from "@/features/invoices/api/fetch-expenses";
-import type { Invoice } from "@/features/invoices/api/fetch-invoices";
 import {
 	Select,
 	SelectContent,
@@ -38,11 +36,18 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { ExpenseFilters } from "@/components/expense-filters";
-import { ExpenseDetailSheet } from "@/components/expense-detail-sheet";
-import { ExpenseTableSkeleton } from "@/components/expense-table-skeleton";
-import { Pagination } from "@/components/ui/pagination";
-import { CategoryIcon } from "@/components/category-icon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { CardFlag } from "@/features/cards/api/create-card";
+import { useFetchCardBySlug } from "@/features/cards/hooks/use-fetch-card-by-slug";
+import type {
+	Expense,
+	ExpenseCategory,
+} from "@/features/invoices/api/fetch-expenses";
+import type { Invoice } from "@/features/invoices/api/fetch-invoices";
+import { useFetchExpenses } from "@/features/invoices/hooks/use-fetch-expenses";
+import { useFetchInvoiceSummary } from "@/features/invoices/hooks/use-fetch-invoice-summary";
+import { useFetchInvoices } from "@/features/invoices/hooks/use-fetch-invoices";
+import { useDebounce } from "@/hooks/use-debounce";
 
 type Params = {
 	cardSlug: string;
@@ -101,6 +106,10 @@ export const OverviewPage = () => {
 	const [allExpensesPage, setAllExpensesPage] = useState(1);
 	const [allExpensesPerPage, setAllExpensesPerPage] = useState(10);
 
+	// Debounce search queries to reduce API calls
+	const debouncedMyExpensesSearch = useDebounce(myExpensesSearchQuery, 500);
+	const debouncedAllExpensesSearch = useDebounce(allExpensesSearchQuery, 500);
+
 	// Fetch all expenses for selected month with server-side filtering
 	const { data: allExpensesData, isLoading: isLoadingAllExpenses } =
 		useFetchExpenses({
@@ -108,7 +117,7 @@ export const OverviewPage = () => {
 			month: selectedMonth,
 			filter: "all",
 			category: allExpensesCategory !== "all" ? allExpensesCategory : undefined,
-			search: allExpensesSearchQuery || undefined,
+			search: debouncedAllExpensesSearch || undefined,
 			page: allExpensesPage,
 			limit: allExpensesPerPage,
 		});
@@ -120,7 +129,7 @@ export const OverviewPage = () => {
 			month: selectedMonth,
 			filter: "mine",
 			category: myExpensesCategory !== "all" ? myExpensesCategory : undefined,
-			search: myExpensesSearchQuery || undefined,
+			search: debouncedMyExpensesSearch || undefined,
 			page: myExpensesPage,
 			limit: myExpensesPerPage,
 		});
@@ -177,14 +186,14 @@ export const OverviewPage = () => {
 		pages: 0,
 	};
 
-	// Reset page when filters change
-	React.useEffect(() => {
+	// Reset page when filters change (use debounced values to sync with actual API calls)
+	useEffect(() => {
 		setMyExpensesPage(1);
-	}, [myExpensesSearchQuery, myExpensesCategory]);
+	}, [debouncedMyExpensesSearch, myExpensesCategory]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setAllExpensesPage(1);
-	}, [allExpensesSearchQuery, allExpensesCategory]);
+	}, [debouncedAllExpensesSearch, allExpensesCategory]);
 
 	const renderExpenseRow = (expense: Expense) => (
 		<ExpenseDetailSheet
@@ -505,7 +514,8 @@ export const OverviewPage = () => {
 														colSpan={6}
 														className="text-center text-muted-foreground py-8"
 													>
-														{myExpensesSearchQuery || myExpensesCategory !== "all"
+														{myExpensesSearchQuery ||
+														myExpensesCategory !== "all"
 															? "Nenhuma despesa encontrada com os filtros aplicados"
 															: "Nenhuma despesa encontrada para este mês"}
 													</TableCell>
@@ -569,7 +579,8 @@ export const OverviewPage = () => {
 														colSpan={6}
 														className="text-center text-muted-foreground py-8"
 													>
-														{allExpensesSearchQuery || allExpensesCategory !== "all"
+														{allExpensesSearchQuery ||
+														allExpensesCategory !== "all"
 															? "Nenhuma despesa encontrada com os filtros aplicados"
 															: "Nenhuma despesa encontrada para este mês"}
 													</TableCell>
