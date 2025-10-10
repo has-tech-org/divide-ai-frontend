@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddCardDialog } from "@/features/cards/components/add-card-dialog";
 import { useFetchCards } from "@/features/cards/hooks/use-fetch-cards";
+import { getCardFlagBorderColor } from "@/utils/card-colors";
 
 export const HomePage = () => {
 	const { data } = useFetchCards();
@@ -73,7 +74,9 @@ export const HomePage = () => {
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						{data.allCards.map((card) => (
 							<Link to={`/app/${card.slug}/overview`} key={card.id}>
-								<Card className="relative overflow-hidden aspect-video group border-border/50 hover:border-border transition-all duration-200 hover:shadow-md">
+								<Card
+									className={`relative overflow-hidden aspect-video group border-border/50 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:-translate-y-1 border-l-4 ${getCardFlagBorderColor(card.flag)}`}
+								>
 									<CardContent className="flex flex-col justify-between h-full p-6">
 										{/* Top Section */}
 										<div className="flex justify-between items-start">

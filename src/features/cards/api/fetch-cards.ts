@@ -1,4 +1,5 @@
 import { api } from "@/lib/api";
+import type { CardFlag } from "./create-card";
 
 type Role = "DEPENDENT" | "ADMIN";
 
@@ -11,6 +12,7 @@ export type Card = {
 	created_at: string;
 	role: Role;
 	is_cardholder: boolean;
+	flag: CardFlag;
 };
 
 export type FetchCardsResponse = {
