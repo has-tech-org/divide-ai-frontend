@@ -1,6 +1,6 @@
-import { Label } from "@radix-ui/react-label";
 import { Loader } from "lucide-react";
 import { useState } from "react";
+import { Label } from "@radix-ui/react-label";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -57,7 +57,7 @@ export function ReassignExpenseDialog({
 			setOpen(false);
 			setSelectedMemberId("");
 		} catch (error) {
-			// Error handling is done in the mutation hook
+			console.error(error);
 		}
 	};
 
@@ -82,7 +82,9 @@ export function ReassignExpenseDialog({
 
 					<div className="space-y-2">
 						<Label className="text-sm font-medium">Responsável atual</Label>
-						<p className="text-sm text-muted-foreground">{expense.owner.name}</p>
+						<p className="text-sm text-muted-foreground">
+							{expense.owner.name}
+						</p>
 					</div>
 
 					<div className="space-y-2">
@@ -102,7 +104,8 @@ export function ReassignExpenseDialog({
 									.filter((member) => member.userId !== expense.owner.id)
 									.map((member) => (
 										<SelectItem key={member.userId} value={member.userId}>
-											{member.name} ({member.role === "ADMIN" ? "Admin" : "Dependente"})
+											{member.name} (
+											{member.role === "ADMIN" ? "Admin" : "Dependente"})
 										</SelectItem>
 									))}
 							</SelectContent>

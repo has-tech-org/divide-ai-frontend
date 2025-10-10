@@ -1,4 +1,9 @@
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -152,7 +157,10 @@ export function Pagination({
 							if (page === "...") {
 								return (
 									<span
-										key={`ellipsis-${index}`}
+										key={`ellipsis-${
+											// biome-ignore lint/suspicious/noArrayIndexKey: this element will not be filtered.
+											index
+										}`}
 										className="px-2 text-sm text-muted-foreground"
 									>
 										...

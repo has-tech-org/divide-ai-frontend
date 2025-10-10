@@ -36,10 +36,7 @@ export function ExpenseTableSkeleton({ rows = 5 }: ExpenseTableSkeletonProps) {
 							<Skeleton className="h-4 w-[100px]" />
 						</TableCell>
 						<TableCell>
-							<div className="flex items-center gap-2">
-								<Skeleton className="h-6 w-6 rounded-md" />
-								<Skeleton className="h-4 w-[80px]" />
-							</div>
+							<Skeleton className="h-6 w-6 rounded-md" />
 						</TableCell>
 						<TableCell>
 							<Skeleton className="h-4 w-[120px]" />

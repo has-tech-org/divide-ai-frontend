@@ -1,5 +1,12 @@
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
-import { Calendar, CreditCard, Loader, UserPlus, Users } from "lucide-react";
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: biome is triggering a false positive */
+import {
+	Calendar,
+	CreditCard,
+	Loader,
+	MoreVertical,
+	UserPlus,
+	Users,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -196,33 +203,38 @@ export const OverviewPage = () => {
 	}, [debouncedAllExpensesSearch, allExpensesCategory]);
 
 	const renderExpenseRow = (expense: Expense) => (
-		<ExpenseDetailSheet
-			key={expense.id}
-			expense={expense}
-			cardSlug={cardSlug || ""}
-			month={selectedMonth}
-		>
-			<TableRow className="cursor-pointer hover:bg-muted/50 transition-colors">
-				<TableCell className="font-medium">{expense.description}</TableCell>
-				<TableCell className="text-muted-foreground">
-					{formatDate(expense.date)}
-				</TableCell>
-				<TableCell>
-					<CategoryIcon category={expense.category} size="sm" />
-				</TableCell>
-				<TableCell className="text-muted-foreground">
-					{expense.owner.name}
-				</TableCell>
-				<TableCell className="text-center text-muted-foreground">
-					{expense.installmentNumber && expense.totalInstallments
-						? `${expense.installmentNumber}/${expense.totalInstallments}`
-						: "À vista"}
-				</TableCell>
-				<TableCell className="text-right font-medium">
-					{formatCurrency(expense.amount)}
-				</TableCell>
-			</TableRow>
-		</ExpenseDetailSheet>
+		<TableRow key={expense.id} className="hover:bg-muted/30 transition-colors">
+			<TableCell className="font-medium">{expense.description}</TableCell>
+			<TableCell className="text-muted-foreground">
+				{formatDate(expense.date)}
+			</TableCell>
+			<TableCell>
+				<CategoryIcon category={expense.category} size="sm" />
+			</TableCell>
+			<TableCell className="text-muted-foreground">
+				{expense.owner.name}
+			</TableCell>
+			<TableCell className="text-center text-muted-foreground">
+				{expense.installmentNumber && expense.totalInstallments
+					? `${expense.installmentNumber}/${expense.totalInstallments}`
+					: "À vista"}
+			</TableCell>
+			<TableCell className="text-right font-medium">
+				{formatCurrency(expense.amount)}
+			</TableCell>
+			<TableCell className="text-center">
+				<ExpenseDetailSheet
+					expense={expense}
+					cardSlug={cardSlug || ""}
+					month={selectedMonth}
+				>
+					<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+						<MoreVertical className="h-4 w-4" />
+						<span className="sr-only">Ver detalhes</span>
+					</Button>
+				</ExpenseDetailSheet>
+			</TableCell>
+		</TableRow>
 	);
 
 	if (isLoading) {
@@ -503,6 +515,9 @@ export const OverviewPage = () => {
 												<TableHead>Responsável</TableHead>
 												<TableHead className="text-center">Parcela</TableHead>
 												<TableHead className="text-right">Valor</TableHead>
+												<TableHead className="text-center">
+													Detalhamento
+												</TableHead>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
@@ -511,7 +526,7 @@ export const OverviewPage = () => {
 											) : (
 												<TableRow>
 													<TableCell
-														colSpan={6}
+														colSpan={7}
 														className="text-center text-muted-foreground py-8"
 													>
 														{myExpensesSearchQuery ||
@@ -568,6 +583,9 @@ export const OverviewPage = () => {
 												<TableHead>Responsável</TableHead>
 												<TableHead className="text-center">Parcela</TableHead>
 												<TableHead className="text-right">Valor</TableHead>
+												<TableHead className="text-center">
+													Detalhamento
+												</TableHead>
 											</TableRow>
 										</TableHeader>
 										<TableBody>
@@ -576,7 +594,7 @@ export const OverviewPage = () => {
 											) : (
 												<TableRow>
 													<TableCell
-														colSpan={6}
+														colSpan={7}
 														className="text-center text-muted-foreground py-8"
 													>
 														{allExpensesSearchQuery ||
