@@ -19,17 +19,19 @@ interface ExpenseFiltersProps {
 	totalResults: number;
 }
 
-const categoryOptions: Array<{ value: ExpenseCategory | "all"; label: string }> =
-	[
-		{ value: "all", label: "Todas as Categorias" },
-		{ value: "FOOD", label: "Alimentação" },
-		{ value: "SHOPPING", label: "Compras" },
-		{ value: "TRANSPORT", label: "Transporte" },
-		{ value: "ENTERTAINMENT", label: "Entretenimento" },
-		{ value: "HEALTH", label: "Saúde" },
-		{ value: "SERVICES", label: "Serviços" },
-		{ value: "OTHER", label: "Outros" },
-	];
+const categoryOptions: Array<{
+	value: ExpenseCategory | "all";
+	label: string;
+}> = [
+	{ value: "all", label: "Todas as Categorias" },
+	{ value: "FOOD", label: "Alimentação" },
+	{ value: "SHOPPING", label: "Compras" },
+	{ value: "TRANSPORT", label: "Transporte" },
+	{ value: "ENTERTAINMENT", label: "Entretenimento" },
+	{ value: "HEALTH", label: "Saúde" },
+	{ value: "SERVICES", label: "Serviços" },
+	{ value: "OTHER", label: "Outros" },
+];
 
 export function ExpenseFilters({
 	searchQuery,
@@ -77,7 +79,7 @@ export function ExpenseFilters({
 						onCategoryChange(value as ExpenseCategory | "all")
 					}
 				>
-					<SelectTrigger className="w-full sm:w-[240px]">
+					<SelectTrigger className="w-full sm:w-[15rem]">
 						<SelectValue placeholder="Categoria" />
 					</SelectTrigger>
 					<SelectContent>

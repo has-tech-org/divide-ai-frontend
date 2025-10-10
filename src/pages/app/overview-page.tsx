@@ -289,26 +289,6 @@ export const OverviewPage = () => {
 							Acompanhe suas despesas e faturas
 						</p>
 					</div>
-					<Select
-						value={selectedInvoiceId}
-						onValueChange={setSelectedInvoiceId}
-					>
-						<SelectTrigger className="w-fit">
-							<Calendar className="w-4 h-4 mr-2" />
-							<SelectValue placeholder="Selecione uma fatura" />
-						</SelectTrigger>
-						<SelectContent>
-							{invoicesData?.invoices.map((invoice) => {
-								return (
-									<SelectItem key={invoice.id} value={invoice.id}>
-										<div className="flex items-center justify-between gap-2 w-full">
-											<span>{formatInvoiceLabel(invoice)}</span>
-										</div>
-									</SelectItem>
-								);
-							})}
-						</SelectContent>
-					</Select>
 				</div>
 			</div>
 
@@ -461,18 +441,27 @@ export const OverviewPage = () => {
 			<div className="space-y-4">
 				<div className="flex items-center justify-between">
 					<h3 className="text-lg font-semibold">Despesas do Mês</h3>
-					{selectedInvoice && (
-						<Badge variant="secondary">
-							{(() => {
-								const date = new Date(selectedInvoice.referenceMonth);
-								const monthName = date.toLocaleDateString("pt-BR", {
-									month: "long",
-									year: "numeric",
-								});
-								return monthName.charAt(0).toUpperCase() + monthName.slice(1);
-							})()}
-						</Badge>
-					)}
+
+					<Select
+						value={selectedInvoiceId}
+						onValueChange={setSelectedInvoiceId}
+					>
+						<SelectTrigger className="w-fit">
+							<Calendar className="w-4 h-4 mr-2" />
+							<SelectValue placeholder="Selecione uma fatura" />
+						</SelectTrigger>
+						<SelectContent>
+							{invoicesData?.invoices.map((invoice) => {
+								return (
+									<SelectItem key={invoice.id} value={invoice.id}>
+										<div className="flex items-center justify-between gap-2 w-full">
+											<span>{formatInvoiceLabel(invoice)}</span>
+										</div>
+									</SelectItem>
+								);
+							})}
+						</SelectContent>
+					</Select>
 				</div>
 
 				<Tabs defaultValue="my-expenses" className="w-full">
